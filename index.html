@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Salutho · Prontuário para Ginecologia e Obstetrícia</title>
+  <meta name="description" content="Prontuário eletrônico com módulo Salu 1000 Dias — feito para ginecologistas e obstetras que querem organizar o pré-natal e entregar mais com o mesmo tempo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --blue:        #2566AF;
+      --blue-dark:   #1a4a85;
+      --blue-deeper: #0f2d55;
+      --teal:        #8DC7C6;
+      --teal-light:  #c4e6e5;
+      --teal-dark:   #5aa8a7;
+      --white:       #ffffff;
+      --off:         #f5f8fc;
+      --slate:       #e8eef5;
+      --ink:         #0f1f35;
+      --mid:         #4a6278;
+      --muted:       #7a90a4;
+      --accent:      #f5a623;
+
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --radius: 16px;
+      --radius-sm: 10px;
+
+      --shadow-card: 0 4px 24px rgba(15,31,53,.08);
+      --shadow-btn:  0 4px 16px rgba(37,102,175,.30);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; }
+    a   { color: inherit; text-decoration: none; }
+
+    .container {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--slate);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--blue);
+      letter-spacing: -.4px;
+    }
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--teal-dark) 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: .85rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+    .btn-nav {
+      background: var(--blue);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: .875rem;
+      font-weight: 700;
+      transition: background .2s, transform .15s;
+    }
+    .btn-nav:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(160deg, var(--blue-deeper) 0%, var(--blue) 55%, #1e6fb5 100%);
+      color: #fff;
+      padding: 100px 0 80px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 90% 20%, rgba(141,199,198,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 300px at 10% 90%, rgba(141,199,198,.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 64px;
+      align-items: center;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(141,199,198,.2);
+      border: 1px solid rgba(141,199,198,.4);
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--teal-light);
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow-dot {
+      width: 7px; height: 7px;
+      background: var(--teal);
+      border-radius: 50%;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -.8px;
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--teal);
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      line-height: 1.65;
+      color: rgba(255,255,255,.82);
+      margin-bottom: 36px;
+      max-width: 500px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--ink);
+      padding: 15px 32px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 800;
+      box-shadow: 0 4px 20px rgba(245,166,35,.4);
+      transition: transform .15s, box-shadow .15s;
+      cursor: pointer;
+      border: none;
+      display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(245,166,35,.5); }
+
+    .btn-ghost {
+      border: 2px solid rgba(255,255,255,.4);
+      color: #fff;
+      padding: 13px 28px;
+      border-radius: 50px;
+      font-size: .95rem;
+      font-weight: 600;
+      transition: border-color .2s, background .2s;
+      display: inline-block;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,.8); background: rgba(255,255,255,.08); }
+
+    /* Hero card / form */
+    .hero-form-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      color: var(--ink);
+    }
+    .hero-form-card h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--blue);
+    }
+    .hero-form-card p {
+      font-size: .875rem;
+      color: var(--mid);
+      margin-bottom: 24px;
+    }
+    .form-field {
+      margin-bottom: 14px;
+    }
+    .form-field label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--mid);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .form-field input,
+    .form-field select {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--slate);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: .95rem;
+      color: var(--ink);
+      background: var(--off);
+      transition: border-color .2s, background .2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .form-field input:focus,
+    .form-field select:focus {
+      outline: none;
+      border-color: var(--blue);
+      background: #fff;
+    }
+    .form-field input::placeholder { color: var(--muted); }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--blue);
+      color: #fff;
+      padding: 15px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      margin-top: 6px;
+      box-shadow: var(--shadow-btn);
+      transition: background .2s, transform .15s;
+    }
+    .btn-submit:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+    .form-note {
+      text-align: center;
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    /* ── SOCIAL PROOF BAR ── */
+    .proof-bar {
+      background: var(--off);
+      border-bottom: 1px solid var(--slate);
+      padding: 20px 0;
+    }
+    .proof-items {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .proof-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--mid);
+    }
+    .proof-item svg { color: var(--blue); flex-shrink: 0; }
+
+    /* ── SECTION BASE ── */
+    section { padding: 88px 0; }
+
+    .section-eyebrow {
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--teal-dark);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.75rem, 3vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -.5px;
+      margin-bottom: 18px;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--mid);
+      line-height: 1.65;
+      max-width: 560px;
+    }
+
+    /* ── PROBLEMA ── */
+    .problem { background: var(--white); }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .problem-visual {
+      background: linear-gradient(135deg, var(--blue-deeper) 0%, var(--blue) 100%);
+      border-radius: var(--radius);
+      padding: 40px 36px;
+      color: #fff;
+    }
+    .problem-visual-label {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 20px;
+    }
+    .before-after {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .ba-card {
+      background: rgba(255,255,255,.08);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .ba-card.after { background: rgba(141,199,198,.18); border: 1px solid rgba(141,199,198,.3); }
+    .ba-label {
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: .7;
+      margin-bottom: 12px;
+    }
+    .ba-card.after .ba-label { color: var(--teal-light); opacity: 1; }
+    .ba-item {
+      font-size: .85rem;
+      line-height: 1.5;
+      color: rgba(255,255,255,.8);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .ba-item:last-child { border-bottom: none; }
+    .ba-card.after .ba-item { color: #fff; }
+    .ba-icon { display: inline-block; width: 16px; }
+
+    .dor-list { list-style: none; padding: 0; }
+    .dor-item {
+      display: flex;
+      gap: 14px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--slate);
+    }
+    .dor-item:last-child { border-bottom: none; }
+    .dor-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .78rem;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+    .dor-text strong { display: block; font-size: 1rem; font-weight: 700; margin-bottom: 4px; color: var(--ink); }
+    .dor-text p { font-size: .9rem; color: var(--mid); }
+
+    /* ── 1000 DIAS ── */
+    .mil-dias { background: var(--off); }
+    .mil-header { text-align: center; margin-bottom: 60px; }
+    .mil-header .section-sub { margin: 0 auto; }
+
+    /* Timeline visual */
+    .timeline {
+      position: relative;
+      max-width: 860px;
+      margin: 0 auto 60px;
+    }
+    .timeline-track {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      top: 24px;
+      bottom: 24px;
+      background: linear-gradient(to bottom, var(--blue) 0%, var(--teal) 100%);
+      border-radius: 4px;
+    }
+    .timeline-items { display: flex; flex-direction: column; gap: 0; }
+    .tl-item {
+      display: grid;
+      grid-template-columns: 1fr 64px 1fr;
+      align-items: center;
+      gap: 0;
+      min-height: 100px;
+    }
+    .tl-item:nth-child(even) .tl-left  { order: 3; text-align: left; padding-left: 28px; }
+    .tl-item:nth-child(even) .tl-center{ order: 2; }
+    .tl-item:nth-child(even) .tl-right { order: 1; text-align: right; padding-right: 28px; }
+    .tl-item:nth-child(odd) .tl-left  { text-align: right; padding-right: 28px; }
+    .tl-item:nth-child(odd) .tl-right { text-align: left; padding-left: 28px; }
+
+    .tl-left, .tl-right { padding-top: 8px; padding-bottom: 8px; }
+
+    .tl-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow-card);
+      display: inline-block;
+      text-align: left;
+      max-width: 280px;
+    }
+    .tl-card-tag {
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--teal-dark);
+      margin-bottom: 6px;
+    }
+    .tl-card h4 { font-size: .95rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .tl-card p  { font-size: .82rem; color: var(--mid); line-height: 1.5; }
+
+    .tl-center { display: flex; justify-content: center; }
+    .tl-dot {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--blue);
+      border: 4px solid #fff;
+      box-shadow: 0 0 0 3px var(--blue);
+      z-index: 1;
+    }
+    .tl-empty { min-height: 80px; }
+
+    /* Pilares cards */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .pillar-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 32px 26px;
+      box-shadow: var(--shadow-card);
+      border-top: 4px solid var(--blue);
+      transition: transform .2s;
+    }
+    .pillar-card:hover { transform: translateY(-4px); }
+    .pillar-card:nth-child(2) { border-top-color: var(--teal-dark); }
+    .pillar-card:nth-child(3) { border-top-color: var(--accent); }
+    .pillar-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+      font-size: 1.4rem;
+    }
+    .pillar-icon.blue  { background: rgba(37,102,175,.1);  }
+    .pillar-icon.teal  { background: rgba(90,168,167,.1);  }
+    .pillar-icon.amber { background: rgba(245,166,35,.12); }
+    .pillar-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+    .pillar-card p  { font-size: .9rem; color: var(--mid); line-height: 1.6; }
+
+    /* ── FUNCIONALIDADES ── */
+    .features { background: var(--white); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .feat-list { display: flex; flex-direction: column; gap: 6px; margin-top: 32px; }
+    .feat-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 18px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .feat-item:hover, .feat-item.active { background: var(--off); }
+    .feat-item.active .feat-icon { background: var(--blue); color: #fff; }
+    .feat-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      border-radius: 10px;
+      background: var(--slate);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      transition: background .2s, color .2s;
+    }
+    .feat-text strong { display: block; font-size: .95rem; font-weight: 700; margin-bottom: 4px; }
+    .feat-text p { font-size: .875rem; color: var(--mid); line-height: 1.55; }
+
+    .feat-visual {
+      position: sticky;
+      top: 100px;
+    }
+    .feat-screen {
+      background: var(--blue-deeper);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(15,31,53,.25);
+      min-height: 340px;
+    }
+    .feat-screen-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .dot-sm { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-sm.r { background: #ff5f57; }
+    .dot-sm.y { background: #febc2e; }
+    .dot-sm.g { background: #28c840; }
+
+    .mock-row {
+      background: rgba(255,255,255,.06);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: rgba(255,255,255,.7);
+      font-size: .85rem;
+    }
+    .mock-row.highlight {
+      background: rgba(141,199,198,.18);
+      border: 1px solid rgba(141,199,198,.3);
+      color: #fff;
+    }
+    .mock-badge {
+      background: var(--teal);
+      color: var(--ink);
+      font-size: .65rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 50px;
+      letter-spacing: .3px;
+    }
+    .mock-progress {
+      height: 6px;
+      background: rgba(255,255,255,.1);
+      border-radius: 3px;
+      overflow: hidden;
+      flex: 1;
+    }
+    .mock-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal-dark), var(--teal));
+      border-radius: 3px;
+    }
+
+    /* ── DIFERENCIAIS ── */
+    .diferenciais {
+      background: linear-gradient(160deg, var(--blue-deeper) 0%, var(--blue) 100%);
+      color: #fff;
+    }
+    .dif-header { text-align: center; margin-bottom: 56px; }
+    .dif-header .section-title { color: #fff; }
+    .dif-header .section-sub  { color: rgba(255,255,255,.72); max-width: 560px; margin: 0 auto; }
+
+    .dif-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .dif-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      padding: 30px 24px;
+      transition: background .2s, transform .2s;
+    }
+    .dif-card:hover { background: rgba(255,255,255,.12); transform: translateY(-3px); }
+    .dif-num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--teal);
+      line-height: 1;
+      margin-bottom: 8px;
+      letter-spacing: -1px;
+    }
+    .dif-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; color: #fff; }
+    .dif-card p  { font-size: .875rem; color: rgba(255,255,255,.65); line-height: 1.6; }
+
+    /* ── COMO FUNCIONA ── */
+    .como { background: var(--off); }
+    .como-header { text-align: center; margin-bottom: 56px; }
+    .como-header .section-sub { margin: 0 auto; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(12.5% + 16px);
+      right: calc(12.5% + 16px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--teal));
+      z-index: 0;
+    }
+    .step-card {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .step-circle {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 1.2rem;
+      font-weight: 900;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,.1);
+    }
+    .step-circle.s1 { background: var(--blue);      color: #fff; }
+    .step-circle.s2 { background: var(--teal-dark); color: #fff; }
+    .step-circle.s3 { background: var(--blue-dark); color: #fff; }
+    .step-circle.s4 { background: var(--teal);      color: var(--ink); }
+    .step-card h4 { font-size: .95rem; font-weight: 700; margin-bottom: 8px; }
+    .step-card p  { font-size: .85rem; color: var(--mid); line-height: 1.55; }
+
+    /* ── SEGURANÇA ── */
+    .seguranca { background: var(--white); }
+    .seg-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .seg-badges {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .seg-badge {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--off);
+      border-radius: 12px;
+      padding: 18px 16px;
+    }
+    .seg-badge-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      border-radius: 8px;
+      background: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: .95rem;
+    }
+    .seg-badge-text strong { display: block; font-size: .88rem; font-weight: 700; margin-bottom: 3px; }
+    .seg-badge-text span   { font-size: .8rem; color: var(--mid); }
+
+    .seg-visual {
+      background: linear-gradient(135deg, var(--off) 0%, var(--teal-light) 100%);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      text-align: center;
+    }
+    .seg-visual-icon {
+      font-size: 4rem; margin-bottom: 20px; line-height: 1;
+    }
+    .seg-visual h3 {
+      font-size: 1.2rem; font-weight: 800;
+      color: var(--blue-deeper); margin-bottom: 12px;
+    }
+    .seg-visual p { font-size: .9rem; color: var(--mid); line-height: 1.65; }
+
+    /* ── PLANO ── */
+    .plano { background: var(--off); }
+    .plano-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .plan-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 36px 30px;
+      box-shadow: var(--shadow-card);
+    }
+    .plan-card.featured {
+      background: var(--blue);
+      color: #fff;
+      transform: scale(1.02);
+    }
+    .plan-badge {
+      background: var(--accent);
+      color: var(--ink);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 50px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .plan-name { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .plan-price {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .plan-price sup { font-size: 1rem; font-weight: 600; letter-spacing: 0; }
+    .plan-period { font-size: .85rem; opacity: .7; margin-bottom: 24px; }
+    .plan-feat-list { list-style: none; margin-bottom: 28px; }
+    .plan-feat-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .9rem;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      color: rgba(255,255,255,.85);
+    }
+    .plan-card:not(.featured) .plan-feat-list li {
+      border-color: var(--slate);
+      color: var(--mid);
+    }
+    .plan-feat-list li:last-child { border-bottom: none; }
+    .plan-check { flex-shrink: 0; color: var(--teal-light); font-size: .85rem; }
+    .plan-card:not(.featured) .plan-check { color: var(--teal-dark); }
+
+    .btn-plan-ghost {
+      display: block;
+      text-align: center;
+      border: 2px solid rgba(255,255,255,.4);
+      color: #fff;
+      padding: 13px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: .95rem;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-plan-ghost:hover { border-color: rgba(255,255,255,.8); background: rgba(255,255,255,.08); }
+
+    .btn-plan-primary {
+      display: block;
+      text-align: center;
+      background: var(--accent);
+      color: var(--ink);
+      padding: 15px;
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: .95rem;
+      box-shadow: 0 4px 16px rgba(245,166,35,.4);
+      transition: transform .15s;
+    }
+    .btn-plan-primary:hover { transform: translateY(-1px); }
+
+    /* ── DEPOIMENTOS ── */
+    .depos { background: var(--white); }
+    .depo-header { text-align: center; margin-bottom: 48px; }
+    .depo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .depo-card {
+      background: var(--off);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      position: relative;
+    }
+    .depo-quote {
+      font-size: 2rem;
+      color: var(--teal-dark);
+      line-height: 1;
+      margin-bottom: 14px;
+      font-family: Georgia, serif;
+    }
+    .depo-text {
+      font-size: .925rem;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .depo-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .depo-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--teal-dark) 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: .8rem; font-weight: 800;
+    }
+    .depo-name { font-size: .875rem; font-weight: 700; color: var(--ink); }
+    .depo-role { font-size: .78rem; color: var(--muted); }
+    .depo-stars { color: var(--accent); font-size: .8rem; margin-bottom: 2px; }
+
+    /* ── FAQ ── */
+    .faq { background: var(--off); }
+    .faq-header { text-align: center; margin-bottom: 48px; }
+    .faq-list { max-width: 720px; margin: 0 auto; }
+    .faq-item {
+      background: #fff;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    }
+    .faq-q {
+      padding: 20px 24px;
+      font-weight: 700;
+      font-size: .95rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .faq-q:hover { color: var(--blue); }
+    .faq-arrow { flex-shrink: 0; transition: transform .25s; color: var(--blue); }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, padding .25s;
+    }
+    .faq-a-inner {
+      padding: 0 24px 20px;
+      font-size: .9rem;
+      color: var(--mid);
+      line-height: 1.7;
+    }
+    .faq-item.open .faq-a { max-height: 300px; }
+
+    /* ── CTA FINAL ── */
+    .cta-final {
+      background: linear-gradient(135deg, var(--blue-deeper) 0%, var(--blue) 60%, #1e78c8 100%);
+      color: #fff;
+      text-align: center;
+      padding: 100px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-final::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 700px 400px at 50% 100%, rgba(141,199,198,.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-final h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -.5px;
+      margin-bottom: 16px;
+    }
+    .cta-final p {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,.78);
+      max-width: 520px;
+      margin: 0 auto 40px;
+      line-height: 1.65;
+    }
+    .cta-final-form {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .cta-final-form input {
+      padding: 15px 22px;
+      border-radius: 50px;
+      border: 2px solid rgba(255,255,255,.3);
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      font-family: var(--font);
+      font-size: .95rem;
+      width: 260px;
+      transition: border-color .2s;
+    }
+    .cta-final-form input::placeholder { color: rgba(255,255,255,.55); }
+    .cta-final-form input:focus { outline: none; border-color: var(--teal); }
+    .cta-note { font-size: .8rem; color: rgba(255,255,255,.5); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,.55);
+      padding: 48px 0 32px;
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .footer-logo { color: #fff; font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; }
+    .footer-tagline { font-size: .83rem; line-height: 1.5; }
+    .footer-links h5 { color: #fff; font-size: .82rem; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; margin-bottom: 14px; }
+    .footer-links a { display: block; font-size: .83rem; margin-bottom: 8px; transition: color .2s; }
+    .footer-links a:hover { color: var(--teal-light); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 24px;
+      font-size: .8rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* ── WHATSAPP BTN ── */
+    .wa-btn {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 200;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: #25D366;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 24px rgba(37,211,102,.45);
+      transition: transform .2s;
+    }
+    .wa-btn:hover { transform: scale(1.1); }
+    .wa-btn svg { width: 28px; height: 28px; fill: #fff; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-grid        { grid-template-columns: 1fr; }
+      .hero-form-card   { max-width: 520px; }
+      .problem-grid     { grid-template-columns: 1fr; }
+      .features-grid    { grid-template-columns: 1fr; }
+      .dif-grid         { grid-template-columns: 1fr 1fr; }
+      .steps            { grid-template-columns: 1fr 1fr; }
+      .steps::before    { display: none; }
+      .seg-grid         { grid-template-columns: 1fr; }
+      .plano-wrap       { grid-template-columns: 1fr; }
+      .plan-card.featured { transform: none; }
+      .depo-grid        { grid-template-columns: 1fr; }
+      .pillars          { grid-template-columns: 1fr; }
+      .timeline-track   { display: none; }
+      .tl-item          { grid-template-columns: 1fr; }
+      .tl-item .tl-left,
+      .tl-item .tl-right { text-align: left !important; padding: 0 !important; }
+      .tl-item .tl-center { display: none; }
+      .tl-item:nth-child(even) .tl-left  { order: unset; }
+      .tl-item:nth-child(even) .tl-center{ order: unset; }
+      .tl-item:nth-child(even) .tl-right { order: unset; }
+      .tl-card { max-width: 100%; width: 100%; }
+    }
+
+    @media (max-width: 600px) {
+      .dif-grid  { grid-template-columns: 1fr; }
+      .steps     { grid-template-columns: 1fr; }
+      .before-after { grid-template-columns: 1fr; }
+      .seg-badges { grid-template-columns: 1fr; }
+      .proof-items { gap: 20px; }
+      .hero { padding: 72px 0 60px; }
+      .cta-final-form { flex-direction: column; align-items: center; }
+      .cta-final-form input { width: 100%; max-width: 320px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">S<sup style="font-size:.6em;vertical-align:super">o</sup></div>
+        Salutho
+      </a>
+      <a href="#demo" class="btn-nav">Agendar demonstração</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot"></span>
+          Ginecologia &amp; Obstetrícia
+        </div>
+        <h1>O prontuário que entende<br><em>o pré-natal de verdade.</em></h1>
+        <p class="hero-sub">
+          Gestão completa da gestante e do bebê dentro de uma única plataforma. Agenda, prontuário com IA, receita digital e o módulo Salu 1000 Dias integrados em um sistema feito para quem cuida da vida desde o começo.
+        </p>
+        <div class="hero-ctas">
+          <a href="#demo" class="btn-primary">Quero ver uma demonstração</a>
+          <a href="#mil-dias" class="btn-ghost">Conhecer o Salu 1000 Dias</a>
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <div class="hero-form-card" id="demo">
+        <h3>Fale com um consultor</h3>
+        <p>Vamos entender o perfil da sua clínica e mostrar como o sistema funciona na prática.</p>
+        <form onsubmit="handleSubmit(event)">
+          <div class="form-field">
+            <label>Nome completo</label>
+            <input type="text" placeholder="Dra. Maria Silva" required />
+          </div>
+          <div class="form-field">
+            <label>WhatsApp</label>
+            <input type="tel" placeholder="(00) 00000-0000" required />
+          </div>
+          <div class="form-field">
+            <label>E-mail</label>
+            <input type="email" placeholder="maria@clinica.com.br" required />
+          </div>
+          <div class="form-field">
+            <label>Especialidade</label>
+            <select required>
+              <option value="" disabled selected>Selecione</option>
+              <option>Ginecologia e Obstetrícia</option>
+              <option>Ginecologia</option>
+              <option>Obstetrícia</option>
+              <option>Pediatria</option>
+              <option>Medicina materno-fetal</option>
+              <option>Outra</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Tipo de atendimento</label>
+            <select required>
+              <option value="" disabled selected>Selecione</option>
+              <option>Consultório individual</option>
+              <option>Clínica com mais de um profissional</option>
+              <option>Clínica materno-infantil</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-submit">Agendar demonstração gratuita →</button>
+        </form>
+        <p class="form-note">Sem compromisso. Um consultor entra em contato em até 2 horas.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- SOCIAL PROOF BAR -->
+<div class="proof-bar">
+  <div class="container">
+    <div class="proof-items">
+      <div class="proof-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Prontuário 100% em nuvem
+      </div>
+      <div class="proof-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Conformidade LGPD
+      </div>
+      <div class="proof-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Suporte humano, sem chatbot
+      </div>
+      <div class="proof-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Migração assistida inclusa
+      </div>
+      <div class="proof-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Módulo Salu 1000 Dias exclusivo
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEMA -->
+<section class="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div>
+        <p class="section-eyebrow">O dia a dia da especialidade</p>
+        <h2 class="section-title">Quanto tempo você gasta com sistema em vez de gastar com a paciente?</h2>
+        <p class="section-sub">A maioria das ginecologistas e obstetras ainda usa sistemas genéricos que obrigam adaptação, ou pior — planilhas e papel. O resultado aparece na agenda lotada e nos registros incompletos.</p>
+
+        <ul class="dor-list" style="margin-top:36px">
+          <li class="dor-item">
+            <div class="dor-num">1</div>
+            <div class="dor-text">
+              <strong>Ficha de pré-natal em papel ou Word</strong>
+              <p>Cada consulta exige reescrever dados, risco de perda de histórico e dificuldade em acompanhar evoluções da gestação.</p>
+            </div>
+          </li>
+          <li class="dor-item">
+            <div class="dor-num">2</div>
+            <div class="dor-text">
+              <strong>Sistema que ignora os protocolos de GO</strong>
+              <p>Anamneses genéricas que precisam ser adaptadas manualmente para cada tipo de consulta ginecológica ou obstétrica.</p>
+            </div>
+          </li>
+          <li class="dor-item">
+            <div class="dor-num">3</div>
+            <div class="dor-text">
+              <strong>Dados de paciente espalhados em vários lugares</strong>
+              <p>Exames em um sistema, receitas em outro, agenda em um terceiro. Tempo perdido, risco de erro e experiência fragmentada para a paciente.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="problem-visual">
+        <div class="problem-visual-label">Antes × Depois da Salutho</div>
+        <p style="font-size:.9rem;color:rgba(255,255,255,.7);margin-bottom:8px;">Veja o que muda na rotina da clínica de GO</p>
+
+        <div class="before-after">
+          <div class="ba-card">
+            <div class="ba-label">Antes</div>
+            <div class="ba-item"><span class="ba-icon">📄</span> Fichas de pré-natal em papel</div>
+            <div class="ba-item"><span class="ba-icon">⏱</span> 15 min por consulta em digitação</div>
+            <div class="ba-item"><span class="ba-icon">📱</span> WhatsApp pessoal para confirmações</div>
+            <div class="ba-item"><span class="ba-icon">🔒</span> Dados sem proteção LGPD</div>
+            <div class="ba-item"><span class="ba-icon">🖨</span> Receituário impresso e assinado</div>
+          </div>
+          <div class="ba-card after">
+            <div class="ba-label">Com a Salutho</div>
+            <div class="ba-item"><span class="ba-icon">✅</span> Pré-natal estruturado no prontuário</div>
+            <div class="ba-item"><span class="ba-icon">🎙</span> IA transcreve a consulta em tempo real</div>
+            <div class="ba-item"><span class="ba-icon">💬</span> Confirmação automática via WhatsApp</div>
+            <div class="ba-item"><span class="ba-icon">🔐</span> Conformidade LGPD garantida</div>
+            <div class="ba-item"><span class="ba-icon">📲</span> Receita digital com assinatura ICP-Brasil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SALU 1000 DIAS -->
+<section class="mil-dias" id="mil-dias">
+  <div class="container">
+    <div class="mil-header">
+      <p class="section-eyebrow">Módulo exclusivo</p>
+      <h2 class="section-title">Os primeiros 1.000 dias definem uma vida inteira.</h2>
+      <p class="section-sub">Da concepção até os dois anos, esse período é o mais crítico para a saúde do bebê e da mãe. A Salutho é a única plataforma com um módulo dedicado a esse acompanhamento dentro do prontuário.</p>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline">
+      <div class="timeline-track"></div>
+      <div class="timeline-items">
+
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-card">
+              <div class="tl-card-tag">Concepção · Semanas 1–12</div>
+              <h4>Primeiro trimestre</h4>
+              <p>Cadastro da gestante, cálculo automático da DPP e início dos protocolos de pré-natal com alertas configuráveis.</p>
+            </div>
+          </div>
+          <div class="tl-center"><div class="tl-dot"></div></div>
+          <div class="tl-right tl-empty"></div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-left tl-empty"></div>
+          <div class="tl-center"><div class="tl-dot"></div></div>
+          <div class="tl-right">
+            <div class="tl-card">
+              <div class="tl-card-tag">Semanas 13–28</div>
+              <h4>Segundo trimestre</h4>
+              <p>Registro de exames, ultrassonografias e evolução do peso da gestante com gráficos integrados ao prontuário.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-card">
+              <div class="tl-card-tag">Semanas 29–42</div>
+              <h4>Terceiro trimestre e parto</h4>
+              <p>Monitoramento de risco, plano de parto e transição automática para o registro do recém-nascido.</p>
+            </div>
+          </div>
+          <div class="tl-center"><div class="tl-dot" style="background:var(--teal-dark);box-shadow:0 0 0 3px var(--teal-dark)"></div></div>
+          <div class="tl-right tl-empty"></div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-left tl-empty"></div>
+          <div class="tl-center"><div class="tl-dot" style="background:var(--teal);box-shadow:0 0 0 3px var(--teal)"></div></div>
+          <div class="tl-right">
+            <div class="tl-card">
+              <div class="tl-card-tag">0 a 24 meses · Pediatria</div>
+              <h4>Primeira infância</h4>
+              <p>Acompanhamento pediátrico integrado: consultas, vacinas e crescimento do bebê no mesmo sistema, sem precisar de outra plataforma.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Pilares -->
+    <div class="pillars">
+      <div class="pillar-card">
+        <div class="pillar-icon blue">🌍</div>
+        <h4>Alinhado aos ODS da ONU</h4>
+        <p>Indicadores ODS 3.1, 3.2 e 3.4 integrados ao fluxo clínico. Cuidado materno-infantil que contribui com as metas nacionais de redução da mortalidade.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon teal">⚙️</div>
+        <h4>Protocolos automatizados</h4>
+        <p>Pré-natal e pediatria com fluxos simplificados dentro do prontuário. Menos burocracia por consulta, mais foco na paciente e no bebê.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon amber">📊</div>
+        <h4>Ciência por trás do módulo</h4>
+        <p>Baseado na Equação de Heckman: cada R$ 1 investido na primeira infância retorna até R$ 7 em saúde pública. Cuidar bem do início tem impacto para sempre.</p>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:48px">
+      <a href="#demo" class="btn-primary" style="display:inline-block">Quero conhecer o Salu 1000 Dias →</a>
+      <p style="margin-top:14px;font-size:.85rem;color:var(--muted)">Módulo adicional a partir de R$ 49,90/mês · Disponível em qualquer plano</p>
+    </div>
+  </div>
+</section>
+
+<!-- FUNCIONALIDADES -->
+<section class="features">
+  <div class="container">
+    <div class="features-grid">
+      <div>
+        <p class="section-eyebrow">Plataforma completa</p>
+        <h2 class="section-title">Tudo em um lugar. Agenda, prontuário, receita e teleconsulta.</h2>
+        <p class="section-sub">Um sistema integrado significa que a ginecologista não precisa abrir quatro abas para atender uma paciente.</p>
+
+        <div class="feat-list">
+          <div class="feat-item active">
+            <div class="feat-icon">🎙</div>
+            <div class="feat-text">
+              <strong>Prontuário com IA e transcrição em tempo real</strong>
+              <p>A IA escuta a consulta e estrutura o prontuário automaticamente. A médica revisa e assina — economizando até 10 minutos por atendimento.</p>
+            </div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-icon">📅</div>
+            <div class="feat-text">
+              <strong>Agenda com confirmação automática via WhatsApp</strong>
+              <p>Pacientes confirmam, remarcam e cancelam pelo WhatsApp sem precisar ligar para a clínica. A secretária faz menos e erra menos.</p>
+            </div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-icon">📱</div>
+            <div class="feat-text">
+              <strong>Teleconsulta integrada ao prontuário</strong>
+              <p>Video consulta direto pela plataforma. O prontuário fica aberto ao lado, sem precisar trocar de sistema durante o atendimento.</p>
+            </div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-icon">✍️</div>
+            <div class="feat-text">
+              <strong>Receita digital com assinatura ICP-Brasil via Mevo</strong>
+              <p>Prescrição eletrônica com validade jurídica. A paciente recebe no WhatsApp e leva para a farmácia pelo celular.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-visual">
+        <div class="feat-screen">
+          <div class="feat-screen-bar">
+            <div class="dot-sm r"></div>
+            <div class="dot-sm y"></div>
+            <div class="dot-sm g"></div>
+          </div>
+
+          <div class="mock-row highlight">
+            <span>🤰</span>
+            <span style="flex:1">Maria Souza · 28 semanas</span>
+            <span class="mock-badge">Pré-natal</span>
+          </div>
+
+          <div style="margin:16px 0 8px;font-size:.7rem;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Evolução gestacional</div>
+
+          <div class="mock-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+            <div style="width:100%;display:flex;justify-content:space-between;font-size:.8rem">
+              <span>Peso gestante</span><span style="color:var(--teal)">+8,4 kg</span>
+            </div>
+            <div class="mock-progress"><div class="mock-progress-fill" style="width:68%"></div></div>
+          </div>
+
+          <div class="mock-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+            <div style="width:100%;display:flex;justify-content:space-between;font-size:.8rem">
+              <span>Consultas realizadas</span><span style="color:var(--teal)">7 de 10</span>
+            </div>
+            <div class="mock-progress"><div class="mock-progress-fill" style="width:70%"></div></div>
+          </div>
+
+          <div style="margin:16px 0 8px;font-size:.7rem;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">IA — transcrição desta consulta</div>
+
+          <div class="mock-row" style="flex-direction:column;align-items:flex-start">
+            <span style="font-size:.78rem;color:rgba(255,255,255,.55);line-height:1.6">
+              Paciente refere movimentos fetais preservados. Pressão arterial 110/70 mmHg. Peso 68,4 kg. Exames dentro dos limites esperados...
+            </span>
+          </div>
+
+          <div class="mock-row highlight" style="margin-top:8px;justify-content:space-between">
+            <span style="font-size:.82rem">📲 Receita digital enviada via WhatsApp</span>
+            <span style="font-size:.72rem;color:var(--teal)">✓ Assinada</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFERENCIAIS -->
+<section class="diferenciais">
+  <div class="container">
+    <div class="dif-header">
+      <p class="section-eyebrow" style="color:var(--teal-light)">Por que a Salutho</p>
+      <h2 class="section-title">Experiência de uso que a equipe adota de verdade.</h2>
+      <p class="section-sub">O maior diferencial da Salutho não é a lista de funcionalidades — é o suporte que garante que o sistema funcione na sua clínica desde o primeiro dia.</p>
+    </div>
+    <div class="dif-grid">
+      <div class="dif-card">
+        <div class="dif-num">01</div>
+        <h4>Suporte humano. Sempre.</h4>
+        <p>Cada cliente tem um consultor dedicado. Sem chatbot, sem fila, sem espera de 48 horas. Quando você precisar, tem uma pessoa do outro lado.</p>
+      </div>
+      <div class="dif-card">
+        <div class="dif-num">02</div>
+        <h4>Migração assistida e gratuita</h4>
+        <p>A equipe da Salutho cuida da migração do sistema atual para o SaluGestor. Histórico de pacientes preservado, sem perda de dados.</p>
+      </div>
+      <div class="dif-card">
+        <div class="dif-num">03</div>
+        <h4>Onboarding que garante adoção</h4>
+        <p>Treinamento personalizado para a equipe clínica e administrativa. O sistema só gera resultado quando a equipe usa com confiança.</p>
+      </div>
+      <div class="dif-card">
+        <div class="dif-num">04</div>
+        <h4>Interface pensada para médicos</h4>
+        <p>Desenvolvida com profissionais de saúde, a experiência da Salutho é fluida e intuitiva — a curva de aprendizado termina no primeiro dia.</p>
+      </div>
+      <div class="dif-card">
+        <div class="dif-num">05</div>
+        <h4>LGPD e segurança bancária</h4>
+        <p>Dados de pacientes criptografados com padrão bancário. Política de privacidade transparente. Seus dados pertencem a você — sempre.</p>
+      </div>
+      <div class="dif-card">
+        <div class="dif-num">06</div>
+        <h4>Salu 1000 Dias: exclusivo de GO</h4>
+        <p>O único módulo do mercado dedicado ao acompanhamento materno-infantil integrado ao prontuário. Construído com e para ginecologistas e obstetras.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="como">
+  <div class="container">
+    <div class="como-header">
+      <p class="section-eyebrow">Processo simples</p>
+      <h2 class="section-title">Da demonstração ao primeiro atendimento em dias.</h2>
+      <p class="section-sub">A implantação da Salutho segue um processo estruturado para que a clínica comece a usar sem interromper a rotina.</p>
+    </div>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-circle s1">1</div>
+        <h4>Demonstração personalizada</h4>
+        <p>Um consultor apresenta o sistema com base no perfil da sua clínica de GO, mostrando os fluxos que fazem sentido para você.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-circle s2">2</div>
+        <h4>Migração do histórico</h4>
+        <p>A equipe Salutho importa os dados do sistema atual. O histórico das pacientes chega intacto, pronto para uso.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-circle s3">3</div>
+        <h4>Treinamento da equipe</h4>
+        <p>Médica, secretária e equipe de apoio treinam juntos. A Salutho garante que todos saibam usar antes de ir ao ar.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-circle s4">4</div>
+        <h4>Clínica no ar com suporte</h4>
+        <p>Primeiras semanas com suporte estendido dedicado. Um consultor acompanha de perto até a equipe ganhar autonomia total.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEGURANÇA -->
+<section class="seguranca">
+  <div class="container">
+    <div class="seg-grid">
+      <div>
+        <p class="section-eyebrow">Segurança e LGPD</p>
+        <h2 class="section-title">Seus dados e os da sua paciente protegidos com padrão bancário.</h2>
+        <p class="section-sub">A maior preocupação de quem troca de sistema é o que acontece com os dados. Na Salutho, os dados pertencem à clínica e à paciente — e isso é garantido em contrato.</p>
+
+        <div class="seg-badges">
+          <div class="seg-badge">
+            <div class="seg-badge-icon">🔐</div>
+            <div class="seg-badge-text">
+              <strong>Criptografia em trânsito e em repouso</strong>
+              <span>Dados protegidos com padrão AES-256</span>
+            </div>
+          </div>
+          <div class="seg-badge">
+            <div class="seg-badge-icon">📋</div>
+            <div class="seg-badge-text">
+              <strong>Conformidade LGPD</strong>
+              <span>Política de privacidade e DPA disponíveis</span>
+            </div>
+          </div>
+          <div class="seg-badge">
+            <div class="seg-badge-icon">☁️</div>
+            <div class="seg-badge-text">
+              <strong>Backup automático diário</strong>
+              <span>Dados replicados em múltiplos servidores</span>
+            </div>
+          </div>
+          <div class="seg-badge">
+            <div class="seg-badge-icon">🏛️</div>
+            <div class="seg-badge-text">
+              <strong>Seus dados são seus</strong>
+              <span>Exportação total garantida a qualquer momento</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="seg-visual">
+        <div class="seg-visual-icon">🛡️</div>
+        <h3>Healthtech brasileira com sede em Jaraguá do Sul, SC</h3>
+        <p>A Salutho foi construída para atender a legislação brasileira de dados de saúde. Prontuário eletrônico com validade jurídica, receita digital certificada e histórico auditável. Suporte e servidores no Brasil.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANOS -->
+<section class="plano" id="planos">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="section-eyebrow">Planos</p>
+      <h2 class="section-title">Preço transparente. Sem surpresa no boleto.</h2>
+      <p class="section-sub" style="margin:0 auto">Todos os planos incluem onboarding, migração assistida e suporte humano. O Salu 1000 Dias é um módulo adicional disponível em qualquer plano.</p>
+    </div>
+
+    <div class="plano-wrap">
+      <div class="plan-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price"><sup>R$</sup>89</div>
+        <div class="plan-period">por usuário / mês · contrato anual</div>
+        <ul class="plan-feat-list">
+          <li><span class="plan-check">✓</span> Prontuário eletrônico com IA</li>
+          <li><span class="plan-check">✓</span> Agenda + WhatsApp</li>
+          <li><span class="plan-check">✓</span> Receita digital Mevo</li>
+          <li><span class="plan-check">✓</span> Teleconsulta integrada</li>
+          <li><span class="plan-check">✓</span> Suporte humano dedicado</li>
+          <li><span class="plan-check">✓</span> Migração assistida gratuita</li>
+        </ul>
+        <a href="#demo" class="btn-plan-ghost" style="border-color:var(--blue);color:var(--blue)">Começar com o Starter</a>
+      </div>
+
+      <div class="plan-card featured">
+        <div class="plan-badge">Mais escolhido em GO</div>
+        <div class="plan-name">Plus · com Salu 1000 Dias</div>
+        <div class="plan-price"><sup>R$</sup>149</div>
+        <div class="plan-period">por usuário / mês + R$ 49,90 módulo · contrato anual</div>
+        <ul class="plan-feat-list">
+          <li><span class="plan-check">✓</span> Tudo do plano Starter</li>
+          <li><span class="plan-check">✓</span> Módulo Salu 1000 Dias</li>
+          <li><span class="plan-check">✓</span> Pré-natal estruturado</li>
+          <li><span class="plan-check">✓</span> Protocolos obstetrícia automatizados</li>
+          <li><span class="plan-check">✓</span> Acompanhamento pediátrico integrado</li>
+          <li><span class="plan-check">✓</span> Relatórios ODS 3.1, 3.2 e 3.4</li>
+        </ul>
+        <a href="#demo" class="btn-plan-primary">Quero o Plus com 1000 Dias →</a>
+      </div>
+    </div>
+
+    <p style="text-align:center;margin-top:28px;font-size:.875rem;color:var(--muted)">
+      Valores válidos para o plano anual. Condições finais alinhadas com o consultor conforme o porte da clínica.
+    </p>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="depos">
+  <div class="container">
+    <div class="depo-header">
+      <p class="section-eyebrow">O que dizem os clientes</p>
+      <h2 class="section-title">Clínicas que já organizaram a gestão com a Salutho.</h2>
+    </div>
+    <div class="depo-grid">
+      <div class="depo-card">
+        <div class="depo-quote">"</div>
+        <p class="depo-text">O prontuário de pré-natal é o que eu precisava há anos. Tenho todo o histórico da gestante em uma tela, com os alertas certos no momento certo. O tempo por consulta caiu bastante.</p>
+        <div class="depo-author">
+          <div class="depo-avatar">DS</div>
+          <div>
+            <div class="depo-stars">★★★★★</div>
+            <div class="depo-name">Dra. Daniela S.</div>
+            <div class="depo-role">Ginecologista e Obstetra · São Paulo, SP</div>
+          </div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-quote">"</div>
+        <p class="depo-text">Fui de papel para digital com migração total. A equipe da Salutho fez tudo. Em duas semanas minha clínica estava rodando, as pacientes adoraram a confirmação automática no WhatsApp.</p>
+        <div class="depo-author">
+          <div class="depo-avatar">RM</div>
+          <div>
+            <div class="depo-stars">★★★★★</div>
+            <div class="depo-name">Dra. Roberta M.</div>
+            <div class="depo-role">Obstetra · Curitiba, PR</div>
+          </div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-quote">"</div>
+        <p class="depo-text">O suporte é o diferencial de verdade. Toda vez que precisei, tinha uma pessoa respondendo rápido. Em outros sistemas ficava em fila de ticket por dias. Aqui é outro nível.</p>
+        <div class="depo-author">
+          <div class="depo-avatar">AF</div>
+          <div>
+            <div class="depo-stars">★★★★★</div>
+            <div class="depo-name">Dra. Ana F.</div>
+            <div class="depo-role">Ginecologista · Porto Alegre, RS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <div class="faq-header">
+      <p class="section-eyebrow">Dúvidas frequentes</p>
+      <h2 class="section-title">Perguntas que a gente ouve toda semana.</h2>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          O sistema funciona para consultório individual?
+          <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Sim. O SaluGestor funciona tanto para a médica que atende sozinha quanto para clínicas com vários profissionais. O Salu 1000 Dias também está disponível em qualquer configuração de equipe.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Preciso de outro sistema além da Salutho?
+          <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">A Salutho centraliza prontuário, agenda, teleconsulta, receita digital e gestão financeira em uma única plataforma. O módulo Salu 1000 Dias roda dentro da mesma tela — sem precisar abrir outro sistema.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          O que acontece com os dados das minhas pacientes se eu cancelar o contrato?
+          <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Os dados pertencem à clínica e à paciente — esse é um princípio inegociável da Salutho. A exportação completa do histórico é garantida a qualquer momento, em formato aberto e legível por outros sistemas.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Como funciona a migração do sistema atual?
+          <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">A equipe da Salutho cuida de todo o processo de migração do histórico de pacientes — com cronograma por escrito e acompanhamento até a clínica ir ao ar. Migração assistida está inclusa no plano.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          O Salu 1000 Dias funciona para a pediatra que acompanha o bebê depois do nascimento?
+          <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Sim. O módulo acompanha o bebê do nascimento até os dois anos com protocolos pediátricos integrados. Ideal para clínicas materno-infantis onde obstetras e pediatras trabalham juntos no mesmo histórico.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Posso ver uma demonstração antes de decidir?
+          <svg class="faq-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Claro. A demonstração é personalizada para o perfil da sua clínica de GO. Um consultor mostra os fluxos de pré-natal, o Salu 1000 Dias e como a IA funciona na prática — sem pressão de fechamento.</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="container" style="position:relative;z-index:1">
+    <h2>Pronta para cuidar das suas pacientes<br>com mais tempo e mais clareza?</h2>
+    <p>Agende uma demonstração gratuita e veja como a Salutho funciona no fluxo real de uma clínica de Ginecologia e Obstetrícia.</p>
+    <form class="cta-final-form" onsubmit="handleSubmit(event)">
+      <input type="text" placeholder="Seu nome" required />
+      <input type="tel" placeholder="WhatsApp" required />
+      <button type="submit" class="btn-primary" style="padding:15px 36px;white-space:nowrap">Agendar demonstração →</button>
+    </form>
+    <p class="cta-note">Demonstração gratuita e sem compromisso · Consultor responde em até 2 horas</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">
+          <span style="display:inline-flex;align-items:center;gap:10px">
+            <span style="width:32px;height:32px;background:linear-gradient(135deg,#2566AF,#5aa8a7);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:#fff">S<sup style="font-size:.55em">o</sup></span>
+            Salutho
+          </span>
+        </div>
+        <p class="footer-tagline" style="max-width:240px">Healthtech brasileira.<br>Conectando pessoas, promovendo saúde.</p>
+        <p style="margin-top:12px;font-size:.8rem">R. João Planincheck, 1444, sala 07<br>Jaraguá do Sul, SC · CEP 89.252-275</p>
+      </div>
+      <div class="footer-links">
+        <h5>Produto</h5>
+        <a href="https://salutho.com/#prontuario">Prontuário com IA</a>
+        <a href="https://salutho.com/#por-dentro">Agenda + WhatsApp</a>
+        <a href="https://salutho.com/#por-dentro">Teleconsulta</a>
+        <a href="https://salutho.com/1000-dias">Salu 1000 Dias</a>
+        <a href="https://salutho.com/planos.html">Planos e preços</a>
+      </div>
+      <div class="footer-links">
+        <h5>Empresa</h5>
+        <a href="https://salutho.com/sobre.html">Sobre nós</a>
+        <a href="https://salutho.com/seguranca.html">Segurança e LGPD</a>
+        <a href="https://salutho.com/blog/">Blog</a>
+        <a href="https://salutho.com/contato.html">Contato</a>
+      </div>
+      <div class="footer-links">
+        <h5>Contato</h5>
+        <a href="https://wa.me/5547992886890">WhatsApp</a>
+        <a href="https://instagram.com/salutho_health">Instagram</a>
+        <a href="https://br.linkedin.com/company/salutho">LinkedIn</a>
+        <a href="https://app.salutho.com">Entrar na plataforma</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Salutho · Todos os direitos reservados</span>
+      <span style="display:flex;gap:20px">
+        <a href="https://salutho.com/termos-de-uso.html" style="transition:color .2s" onmouseover="this.style.color='#8DC7C6'" onmouseout="this.style.color=''">Termos de Uso</a>
+        <a href="https://salutho.com/politica-privacidade.html" style="transition:color .2s" onmouseover="this.style.color='#8DC7C6'" onmouseout="this.style.color=''">Política de Privacidade</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp flutuante -->
+<a href="https://wa.me/5547992886890" target="_blank" class="wa-btn" aria-label="Falar pelo WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<script>
+  // FAQ accordion
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"], .btn-submit');
+    if (btn) {
+      const original = btn.textContent;
+      btn.textContent = '✓ Enviado! Entraremos em contato em breve.';
+      btn.style.background = '#28a745';
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+        e.target.reset();
+      }, 4000);
+    }
+    // Aqui integra com CRM / webhook da Salutho
+    // fetch('/api/lead', { method: 'POST', body: new FormData(e.target) })
+  }
+
+  // Scroll reveal leve
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.pillar-card, .dif-card, .step-card, .depo-card, .seg-badge, .feat-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    observer.observe(el);
+  });
+
+  // Feature tabs
+  document.querySelectorAll('.feat-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.feat-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
