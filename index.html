@@ -1748,7 +1748,62 @@
   </svg>
 </a>
 
+
+
+
+<!-- MODAL FORMULÁRIO -->
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close-btn" aria-label="Fechar">✕</button>
+    <div class="modal-header">
+      <div class="modal-tag">Demonstração gratuita</div>
+      <h3 id="modal-title">Fale com um consultor</h3>
+      <p>Vamos entender o perfil da sua clínica e mostrar como o sistema funciona na prática.</p>
+    </div>
+    <form onsubmit="handleSubmit(event)">
+      <div class="form-field">
+        <label>Nome completo</label>
+        <input type="text" placeholder="Dra. Maria Silva" required />
+      </div>
+      <div class="form-field">
+        <label>WhatsApp</label>
+        <input type="tel" id="tel-modal" placeholder="(00) 00000-0000" required autocomplete="tel" />
+      </div>
+      <div class="form-field">
+        <label>E-mail</label>
+        <input type="email" placeholder="maria@clinica.com.br" required />
+      </div>
+      <div class="form-field">
+        <label>Especialidade</label>
+        <select required>
+          <option value="" disabled selected>Selecione</option>
+          <option>Ginecologia e Obstetrícia</option>
+          <option>Ginecologia</option>
+          <option>Obstetrícia</option>
+          <option>Pediatria</option>
+          <option>Medicina materno-fetal</option>
+          <option>Outra</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Tipo de atendimento</label>
+        <select required>
+          <option value="" disabled selected>Selecione</option>
+          <option>Consultório individual</option>
+          <option>Clínica com mais de um profissional</option>
+          <option>Clínica materno-infantil</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-submit">Agendar demonstração gratuita →</button>
+    </form>
+    <p class="form-note">Sem compromisso. Um consultor entra em contato em até 2 horas.</p>
+  </div>
+</div>
+
+
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+
 
   // Modal
   var modal = document.getElementById('modal');
@@ -1867,57 +1922,8 @@
       item.classList.add('active');
     });
   });
+
+});
 </script>
-
-
-<!-- MODAL FORMULÁRIO -->
-<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-  <div class="modal-box">
-    <button class="modal-close" id="modal-close-btn" aria-label="Fechar">✕</button>
-    <div class="modal-header">
-      <div class="modal-tag">Demonstração gratuita</div>
-      <h3 id="modal-title">Fale com um consultor</h3>
-      <p>Vamos entender o perfil da sua clínica e mostrar como o sistema funciona na prática.</p>
-    </div>
-    <form onsubmit="handleSubmit(event)">
-      <div class="form-field">
-        <label>Nome completo</label>
-        <input type="text" placeholder="Dra. Maria Silva" required />
-      </div>
-      <div class="form-field">
-        <label>WhatsApp</label>
-        <input type="tel" id="tel-modal" placeholder="(00) 00000-0000" required autocomplete="tel" />
-      </div>
-      <div class="form-field">
-        <label>E-mail</label>
-        <input type="email" placeholder="maria@clinica.com.br" required />
-      </div>
-      <div class="form-field">
-        <label>Especialidade</label>
-        <select required>
-          <option value="" disabled selected>Selecione</option>
-          <option>Ginecologia e Obstetrícia</option>
-          <option>Ginecologia</option>
-          <option>Obstetrícia</option>
-          <option>Pediatria</option>
-          <option>Medicina materno-fetal</option>
-          <option>Outra</option>
-        </select>
-      </div>
-      <div class="form-field">
-        <label>Tipo de atendimento</label>
-        <select required>
-          <option value="" disabled selected>Selecione</option>
-          <option>Consultório individual</option>
-          <option>Clínica com mais de um profissional</option>
-          <option>Clínica materno-infantil</option>
-        </select>
-      </div>
-      <button type="submit" class="btn-submit">Agendar demonstração gratuita →</button>
-    </form>
-    <p class="form-note">Sem compromisso. Um consultor entra em contato em até 2 horas.</p>
-  </div>
-</div>
-
 </body>
 </html>
